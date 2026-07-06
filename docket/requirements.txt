@@ -1,0 +1,7 @@
+# Pinned for reproducible builds. Bump deliberately, then re-run tests + docker build.
+mcp==1.28.1
+httpx==0.28.1
+beautifulsoup4==4.15.0
+PyYAML==6.0.3
+markdownify==1.2.3
+sqlite-vec==0.1.9

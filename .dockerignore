@@ -1,0 +1,12 @@
+# Keep the build context lean — none of this belongs in the image.
+.git
+data/
+*.db
+*.db-wal
+*.db-shm
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+sources.yml

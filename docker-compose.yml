@@ -1,0 +1,62 @@
+services:
+  mcp:
+    image: ghcr.io/directedbits/docket:latest   # pulls the published image (no local build)
+    ports:
+      # Publish only on host loopback — local-machine-only, never LAN/internet.
+      # (Container binds 0.0.0.0 internally so Docker's forward works; the
+      # 127.0.0.1 prefix here is what keeps it off the network.)
+      - "127.0.0.1:8765:8765"
+    volumes:
+      - data:/data
+      # - ./sources.yml:/data/sources.yml:ro   # optional: auto-seed these sources on startup (see sources.example.yml)
+    environment:
+      DB_PATH: /data/docs.db
+      PORT: "8765"
+      HOST: "0.0.0.0"  # inside the container only; host exposure is limited by the ports mapping above
+      # Optional tunables (defaults shown; see docket/config.py):
+      # LOG_LEVEL: "INFO"               # DEBUG | INFO | WARNING | ERROR
+      # SEED_FILE: "/data/sources.yml"  # path to optional startup seed list
+      # JOB_RETENTION_SECS: "86400"     # prune terminal jobs older than this
+      # PRUNE_INTERVAL_SECS: "3600"
+      # REINDEX_COOLDOWN_SECS: "3600"   # skip re-index within this window unless force
+      # REQUEST_TIMEOUT_SECS: "30"
+      # USER_AGENT: "Mozilla/5.0 (X11; Linux x86_64) docket/0.1"
+      # CHUNK_MAX_CHARS: "4000"
+      # CODE_FILE_CAP: "20000"
+      # MAX_PAGES: "200"                 # cap llms.txt manifest links fetched per index
+      # MAX_TOTAL_BYTES: "50000000"      # cap total ingested content per source
+      # MAX_RESPONSE_BYTES: "10000000"   # per-response download cap (DoS guard)
+      # MAX_REDIRECTS: "5"
+      # CLONE_TIMEOUT_SECS: "300"        # git clone hard timeout
+      # ALLOW_INTERNAL_IPS: "false"      # true = skip SSRF guard (allow fetching/cloning LAN/localhost)
+      # DEFAULT_K: "5"
+      # MAX_K: "50"
+      # SNIPPET_TOKENS: "12"
+      # DB_BUSY_TIMEOUT_MS: "30000"
+      # LOCAL_ROOT_ALLOWLIST: "/data/docs"  # restrict local file/dir ingest to these roots (os.pathsep-separated); empty = off
+      # IGNORE_FILE: ".docketignore"         # per-directory ignore file (gitignore-ish globs)
+      # DEFAULT_IGNORE_FILE: "/srv/docket/default_ignores.txt"  # global baked-in defaults; point elsewhere to override
+      # --- Vector search (Phase 2), OFF by default → pure keyword ---
+      # EMBED_ENABLED: "true"
+      # EMBED_OLLAMA_URL: "http://ollama:11434"  # the bundled service below; for a host/LAN Ollama use its address
+      #                                          # (from a container, the host is host.docker.internal, NOT 127.0.0.1)
+      # EMBED_MODEL: "nomic-embed-text"
+      # EMBED_TIMEOUT_SECS: "60"
+      # VECTOR_CANDIDATES: "50"
+      # RRF_K: "60"
+    restart: unless-stopped
+
+  # Optional: run Ollama alongside for embeddings, or point EMBED_OLLAMA_URL at a
+  # separately-hosted instance and leave this commented. Pull the model once with:
+  #   docker compose exec ollama ollama pull nomic-embed-text
+  # ollama:
+  #   image: ollama/ollama
+  #   ports:
+  #     - "127.0.0.1:11434:11434"
+  #   volumes:
+  #     - ollama:/root/.ollama
+  #   restart: unless-stopped
+
+volumes:
+  data:
+  # ollama:

@@ -1,0 +1,7 @@
+# Developer override — build the image locally instead of pulling from GHCR.
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d
+services:
+  mcp:
+    build: .
+    image: docket:dev   # local tag; overrides the ghcr.io image from the base file

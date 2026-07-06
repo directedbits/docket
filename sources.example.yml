@@ -1,0 +1,11 @@
+# Copy to sources.yml and mount it at /data/sources.yml (uncomment the line in
+# docker-compose.yml) to auto-seed these sources when the server starts.
+#
+# Sources already in the cache are skipped — a restart never re-crawls. To refresh
+# an existing source, call the index tool with force=true.
+sources:
+  - source: react
+    url: https://react.dev/llms-full.txt
+    version: latest        # optional; omit -> latest
+  - source: fastapi
+    url: https://fastapi.tiangolo.com/llms-full.txt

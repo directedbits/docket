@@ -1,0 +1,15 @@
+# Global default ignore patterns — always applied during directory ingest.
+# Baked into the image; override the path with the DEFAULT_IGNORE_FILE env var.
+# One glob per line, matched against file/dir basenames; '#' starts a comment.
+# A per-directory .docketignore (config.IGNORE_FILE) adds to these.
+.git
+node_modules
+__pycache__
+.venv
+venv
+.mypy_cache
+.pytest_cache
+.tox
+.idea
+.vscode
+*.lock
