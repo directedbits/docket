@@ -26,7 +26,9 @@ hostile target. The hardening below is aimed squarely at that boundary.
 - **Resource limits** — per-response download cap (`MAX_RESPONSE_BYTES`, catches
   decompression bombs), total-content cap per source, redirect cap, and page cap on
   manifest crawls.
-- **Container** — runs as a **non-root** user; minimal base image.
+- **Container** — the server process runs as a **non-root** user (a minimal root
+  entrypoint fixes the mounted data-volume's ownership, then drops privileges via
+  `gosu`); minimal base image.
 - **Data layer** — all SQL is parameterized; YAML is parsed with `safe_load`.
 - **Local file ingest** can be restricted with `LOCAL_ROOT_ALLOWLIST` (see below).
 
